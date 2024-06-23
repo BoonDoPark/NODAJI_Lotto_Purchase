@@ -2,8 +2,9 @@ package com.nodaji.lotto_payment.domain.dto.request;
 
 import com.nodaji.lotto_payment.domain.entity.LottoResult;
 
+import java.util.List;
+
 public record LottoResultRequest(
-        Long round,
         Integer first,
         Integer second,
         Integer third,
@@ -24,5 +25,16 @@ public record LottoResultRequest(
                 .bonus(bonus)
                 .createAt(createAt)
                 .build();
+    }
+
+    public List<Integer> makeLottoResultList(LottoResult lottoResult) {
+        return List.of(
+                lottoResult.getFirst(),
+                lottoResult.getSecond(),
+                lottoResult.getThird(),
+                lottoResult.getFourth(),
+                lottoResult.getFifth(),
+                lottoResult.getSixth()
+        );
     }
 }

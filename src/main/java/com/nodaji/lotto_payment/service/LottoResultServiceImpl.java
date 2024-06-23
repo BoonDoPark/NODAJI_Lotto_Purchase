@@ -2,15 +2,15 @@ package com.nodaji.lotto_payment.service;
 
 import com.nodaji.lotto_payment.domain.dto.request.LottoResultRequest;
 import com.nodaji.lotto_payment.domain.dto.response.LottoPaymentResponse;
-import com.nodaji.lotto_payment.domain.entity.LottoPayment;
+import com.nodaji.lotto_payment.domain.dto.response.LottoRankResponse;
+import com.nodaji.lotto_payment.domain.entity.LottoResult;
 import com.nodaji.lotto_payment.domain.repository.LottoPaymentRepository;
 import com.nodaji.lotto_payment.domain.repository.LottoResultRepository;
 import com.nodaji.lotto_payment.utils.LottoRank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -21,27 +21,27 @@ public class LottoResultServiceImpl implements LottoResultService {
     @Override
     public void save(LottoResultRequest req) {
         if (req == null) throw new IllegalArgumentException();
-        lottoResultRepository.save(req.toEntity());
-        List<LottoPaymentResponse> lottoPaymentResponses = lottoPaymentRepository.findAllByRound(req.round());
-        lottoPaymentResponses.forEach(userLotto -> {
+        LottoResult lottoResult = lottoResultRepository.save(req.toEntity());
+        List<LottoPaymentResponse> lottoPaymentResponses = lottoPaymentRepository.findByRound(lottoResult.getId());
+        List<Map<UUID, Integer>> responseRank = new ArrayList<>();
+        LottoRankResponse lottoRankResponse = new LottoRankResponse();
 
+        lottoPaymentResponses.forEach(lottoPaymentResponse -> {
+            int count = lottoPaymentResponse.countLottoNumber(lottoPaymentResponse, req, lottoResult);
+            boolean isBonusCheck = lottoPaymentResponse.isBonusNumber(lottoPaymentResponse, req.bonus());
+            LottoRank lottoRank = getRank(count, isBonusCheck);
+            System.out.println(lottoRank);
+            // 유저 별로 당첨 로직 필요
+             responseRank.add(lottoRankResponse.makeMaxRankByUser(lottoPaymentResponse.userId(), lottoRank.getLottoRank()));
         });
+
+
+
+        // 유저 ID, 최고 등수를 auth와 구매 내역으로 전달 로직 필요
+//         responseRank
     }
 
-    @Override
-    public int countLottoNumber(LottoPaymentResponse lottoPayment, LottoResultRequest lottoResult) {
-        int lottoWinCount = 0;
-        if (lottoResult.first().equals(lottoPayment.first())) lottoWinCount++;
-        if (lottoResult.second().equals(lottoPayment.second())) lottoWinCount++;
-        if (lottoResult.third().equals(lottoPayment.third())) lottoWinCount++;
-        if (lottoResult.fourth().equals(lottoPayment.fourth())) lottoWinCount++;
-        if (lottoResult.fifth().equals(lottoPayment.fifth())) lottoWinCount++;
-        if (lottoResult.sixth().equals(lottoPayment.sixth())) lottoWinCount++;
-        return lottoWinCount;
-    }
-
-    @Override
-    public LottoRank getRank(int countLottoNum) {
+    private LottoRank getRank(int countLottoNum, boolean isBonusMatch) {
         if (countLottoNum == 6) {
             return LottoRank.ONE;
         } else if (countLottoNum == 5 && isBonusMatch) {
@@ -52,7 +52,6 @@ public class LottoResultServiceImpl implements LottoResultService {
             return LottoRank.FOUR;
         } else if (countLottoNum == 3) {
             return LottoRank.FIVE;
+        } else return LottoRank.NOT;
     }
-
-
 }

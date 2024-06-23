@@ -45,9 +45,6 @@ public class LottoPayment {
     @Column(name = "ROUND")
     private Long round;
 
-    @Column(name = "PAY_ID")
-    private Long payId;
-
     @Column(name = "USER_ID")
     private UUID userId;
 }

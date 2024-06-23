@@ -2,6 +2,7 @@ package com.nodaji.lotto_payment.domain.dto.request;
 
 import com.nodaji.lotto_payment.domain.entity.LottoPayment;
 
+import java.util.List;
 import java.util.UUID;
 
 public record LottoPaymentRequest(
@@ -10,8 +11,7 @@ public record LottoPaymentRequest(
         Integer third,
         Integer fourth,
         Integer fifth,
-        Integer sixth,
-        Long payId
+        Integer sixth
 ) {
     public LottoPayment toEntity(Long round) {
         return LottoPayment.builder()
@@ -22,7 +22,9 @@ public record LottoPaymentRequest(
                 .fifth(fifth)
                 .sixth(sixth)
                 .round(round)
-                .payId(payId)
+//                .userId(userId)
                 .build();
     }
+
+
 }
