@@ -2,6 +2,7 @@ package com.nodaji.lotto_payment.domain.dto.request;
 
 import com.nodaji.lotto_payment.domain.entity.LottoResult;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public record LottoResultRequest(

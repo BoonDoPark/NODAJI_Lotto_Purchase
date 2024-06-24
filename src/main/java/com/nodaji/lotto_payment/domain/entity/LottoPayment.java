@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -38,13 +40,12 @@ public class LottoPayment {
     @Column(name = "SIXTH")
     private Integer sixth;
 
-    @CreatedDate
     @Column(name = "CREATE_AT")
-    private String createAt;
+    private LocalDate createAt;
 
     @Column(name = "ROUND")
     private Long round;
 
     @Column(name = "USER_ID")
-    private UUID userId;
+    private String userId;
 }

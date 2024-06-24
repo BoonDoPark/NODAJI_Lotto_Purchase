@@ -3,6 +3,7 @@ package com.nodaji.lotto_payment.domain.dto.response;
 import com.nodaji.lotto_payment.domain.dto.request.LottoResultRequest;
 import com.nodaji.lotto_payment.domain.entity.LottoResult;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,8 @@ public record LottoPaymentResponse(
         Integer fourth,
         Integer fifth,
         Integer sixth,
-        UUID userId
+        LocalDate createAt,
+        String userId
 ) {
     public List<Integer> makeLottoPaymentList(LottoPaymentResponse lottoPayment) {
         return List.of(

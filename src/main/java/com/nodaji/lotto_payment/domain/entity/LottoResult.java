@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -39,7 +41,4 @@ public class LottoResult {
 
     @Column(name = "CREATE_AT")
     private String createAt;
-
-    @Column(name = "ROUND")
-    private Long round;
 }

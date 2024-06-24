@@ -9,7 +9,7 @@ public record LottoRankResponse(
         Map<UUID, Integer> userRank = new HashMap<>();
         List<Integer> rankList = makeRankList(rank);
         Integer maxRank = Collections.max(rankList);
-        userRank.put(userId, maxRank);
+        userRank.merge(userId, maxRank, Math::min);
         return userRank;
     }
 

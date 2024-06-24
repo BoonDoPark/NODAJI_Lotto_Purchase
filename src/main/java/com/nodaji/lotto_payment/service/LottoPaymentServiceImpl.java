@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,7 +22,7 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
     @Override
     public void save(List<LottoPaymentRequest> requests) {
         if (requests.isEmpty()) throw new IllegalArgumentException();
-//        Long round = lottoResultRepository.findLastRow().getId();
+//        Long round = lottoResultRepository.findLastRow();
         Long finalRound = getRound();
         requests.forEach(req -> {
                     lottoPaymentRepository.save(req.toEntity(finalRound));
@@ -31,13 +32,17 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
     }
 
     private Long getRound() {
-        LottoResult lottoResult = lottoResultRepository.findLastRow();
-        if(lottoResult != null) return lottoResult.getId();
-        else return 1L;
+        Optional<LottoResult> optionalResult = Optional.ofNullable(lottoResultRepository.findLastRow());
+        if (optionalResult.isPresent() && optionalResult.get().getId() != null) {
+            return optionalResult.get().getId();
+        } else {
+            return 1L; // 테이블이 비어있을 경우 기본값으로 1을 반환하거나, 필요에 따라 다른 값을 반환할 수 있음
+        }
     }
 
     @Override
     public List<LottoPaymentResponse> getAllByUserIdAndRoundId(Long round) {
+        // 유저 id 필요
         return lottoPaymentRepository.findByRound(round);
     }
 
