@@ -40,7 +40,9 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
         totalPointRepository.save(new TotalPoint(finalRound, requests.size()*1000L));
 
         requests.forEach(req -> {
-                    lottoPaymentRepository.save(req.toEntity(finalRound, userId));
+                    LottoPayment lottoPayment = lottoPaymentRepository.save(req.toEntity(finalRound, userId));
+                    // id, userid, date, round 구매 내역 전달
+
                 }
         );
     }
