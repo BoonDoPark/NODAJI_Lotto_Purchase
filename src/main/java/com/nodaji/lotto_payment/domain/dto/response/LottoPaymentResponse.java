@@ -5,7 +5,6 @@ import com.nodaji.lotto_payment.domain.entity.LottoResult;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 public record LottoPaymentResponse(
         Long id,

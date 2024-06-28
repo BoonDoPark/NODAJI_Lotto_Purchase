@@ -8,12 +8,12 @@ public enum LottoRank {
     TWO(2),
     THREE(3),
     FOUR(4),
-    FIVE(5),
-    NOT(6);
+    FIVE(5);
+//    NOT(6);
 
-    private final int lottoRank;
+    private final Integer lottoRank;
 
-    LottoRank(int i) {
+    LottoRank(Integer i) {
         this.lottoRank = i;
     }
 
@@ -28,6 +28,6 @@ public enum LottoRank {
             return LottoRank.FOUR;
         } else if (countLottoNum == 3) {
             return LottoRank.FIVE;
-        } else return LottoRank.NOT;
+        } else return null;
     }
 }
