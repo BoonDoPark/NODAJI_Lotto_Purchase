@@ -39,7 +39,4 @@ public class LottoResult {
 
     @Column(name = "CREATE_AT")
     private String createAt;
-
-    @Column(name = "ROUND")
-    private Long round;
 }

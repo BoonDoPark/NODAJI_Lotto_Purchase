@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface LottoPaymentService {
-    void save(List<LottoPaymentRequest> requests);
+    void save(String userId, List<LottoPaymentRequest> requests);
     List<LottoPaymentResponse> getAllByUserIdAndRoundId(Long round);
 }

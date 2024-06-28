@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8080
 spring:
   application:
     name: lotto-payment
@@ -11,3 +11,11 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+  kafka:
+    bootstrap-servers: 192.168.0.20:9092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+token:
+  secret: guess_secretguess_secretguess_secretguess_secret
+

@@ -5,9 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.util.UUID;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -38,13 +37,15 @@ public class LottoPayment {
     @Column(name = "SIXTH")
     private Integer sixth;
 
-    @CreatedDate
+    @Column(name = "RANK")
+    private int rank;
+
     @Column(name = "CREATE_AT")
-    private String createAt;
+    private LocalDate createAt;
 
     @Column(name = "ROUND")
     private Long round;
 
     @Column(name = "USER_ID")
-    private UUID userId;
+    private String userId;
 }
