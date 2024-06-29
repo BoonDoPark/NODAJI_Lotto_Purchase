@@ -35,7 +35,7 @@ public class KafkaProducer {
 
 
     public void sendPay(KafkaPayInfoRequest kafkaPayInfoRequest, String topic) {
-        KafkaPayStatus<KafkaPayInfoRequest> kafkaPayInfo = new KafkaPayStatus<>(kafkaPayInfoRequest, "history");
+        KafkaPayStatus<KafkaPayInfoRequest> kafkaPayInfo = new KafkaPayStatus<>(kafkaPayInfoRequest, "pay");
         log.info("topic : {} data : {}", topic, kafkaPayInfoRequest);
         kafkaPayTemplate.send(topic, kafkaPayInfo);
     }
