@@ -2,6 +2,7 @@ package com.nodaji.lotto_payment.service;
 
 import com.nodaji.lotto_payment.config.apis.ApiPoint;
 import com.nodaji.lotto_payment.domain.dao.LottoPaymentDao;
+import com.nodaji.lotto_payment.domain.dto.request.KafkaPayInfoRequest;
 import com.nodaji.lotto_payment.domain.dto.request.LottoPayRequest;
 import com.nodaji.lotto_payment.domain.dto.request.LottoPaymentRequest;
 import com.nodaji.lotto_payment.domain.dto.response.LottoPaymentResponse;
@@ -12,6 +13,7 @@ import com.nodaji.lotto_payment.domain.entity.TotalPoint;
 import com.nodaji.lotto_payment.domain.repository.LottoPaymentRepository;
 import com.nodaji.lotto_payment.domain.repository.LottoResultRepository;
 import com.nodaji.lotto_payment.domain.repository.TotalPointRepository;
+import com.nodaji.lotto_payment.kafka.producer.KafkaProducer;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
     private final LottoPaymentDao lottoPaymentDao;
     private final TotalPointRepository totalPointRepository;
     private final ApiPoint apiPoint;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public void save(String userId, List<LottoPaymentRequest> requests) {
@@ -42,7 +45,8 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
         requests.forEach(req -> {
                     LottoPayment lottoPayment = lottoPaymentRepository.save(req.toEntity(finalRound, userId));
                     // id, userid, date, round 구매 내역 전달
-
+                    KafkaPayInfoRequest kafkaPayInfoRequest = new KafkaPayInfoRequest(lottoPayment.getId(), lottoPayment.getUserId(), lottoPayment.getCreateAt(), lottoPayment.getRound());
+                    kafkaProducer.sendPay(kafkaPayInfoRequest, "history-topic");
                 }
         );
     }

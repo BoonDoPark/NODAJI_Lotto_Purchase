@@ -61,10 +61,10 @@ public class LottoResultServiceImpl implements LottoResultService {
             PointRequest pointRequest = new PointRequest(userId, LottoPoint.FIFTH.getLottoPoint());
             System.out.println(pointRequest.amount());
             apiPoint.sendPoint(pointRequest);
-            //            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 kafka
+            // 구매 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 kafka
 
 
-//            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 feign
+            // 구매 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 feign
         });
 
         lottoResultPoint.getOrDefault(4, new ArrayList<>()).forEach(userId -> {
@@ -104,10 +104,10 @@ public class LottoResultServiceImpl implements LottoResultService {
             PointRequest pointRequest = new PointRequest(userId, firstPoint);
             System.out.println(pointRequest.amount());
             apiPoint.sendPoint(pointRequest);
-            //            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 kafka
+            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 kafka
 
 
-//            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 feign
+            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 feign
         });
 
         // auth에게 데이터 전달
