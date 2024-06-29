@@ -61,6 +61,11 @@ public class LottoResultServiceImpl implements LottoResultService {
         lottoResultPoint.getOrDefault(5, new ArrayList<>()).forEach(userId -> {
             PointRequest pointRequest = new PointRequest(userId, LottoPoint.FIFTH.getLottoPoint());
             System.out.println(pointRequest.amount());
+            apiPoint.sendPoint(pointRequest);
+            // 구매 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 kafka
+
+
+            // 구매 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 feign
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
                     new KafkaLottoHistoryRequest(pointRequest.userId(), pointRequest.amount(),5L);
             kafkaProducer.sendHistory(kafkaLottoHistoryRequest,"history-topic");
@@ -106,7 +111,9 @@ public class LottoResultServiceImpl implements LottoResultService {
             Long firstPoint = firstTotalPoint / lottoResultPoint.get(1).size();
             PointRequest pointRequest = new PointRequest(userId, firstPoint);
             System.out.println(pointRequest.amount());
-//            apiPoint.sendPoint(pointRequest);
+            apiPoint.sendPoint(pointRequest);
+            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 kafka
+
             //            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 kafka
             // KafkaSendHistory kafkaSendhistory = new KafkaSendhistory(pointRequest.usdrId(), pointRequest.amount(), 4)
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
@@ -114,8 +121,7 @@ public class LottoResultServiceImpl implements LottoResultService {
             // kafkaProducer.sendHistroy(kafkaSendhistory);
             kafkaProducer.sendHistory(kafkaLottoHistoryRequest,"history-topic");
 
-
-//            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 feign
+            // 유저 ID를 통해 등수, 당첨금을 구매 내역으로 전달 로직 필요 feign
         });
 
         // auth에게 데이터 전달

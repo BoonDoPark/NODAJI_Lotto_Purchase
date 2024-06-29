@@ -19,3 +19,6 @@ spring:
 token:
   secret: guess_secretguess_secretguess_secretguess_secret
 
+kafka:
+  product:
+    name: history-topic
