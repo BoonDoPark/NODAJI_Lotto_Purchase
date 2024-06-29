@@ -32,12 +32,12 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
     @Override
     public void save(String userId, List<LottoPaymentRequest> requests) {
         if (requests.isEmpty()) throw new IllegalArgumentException();
-        // point 전달 유효한지 체크
-//        PointResponse pointResponse = apiPoint.getPoint(requests.get(0).userId());
-//        if (pointResponse.amount() < (requests.size() * 1000L)) throw new IllegalArgumentException("포인트가 부족합니다.");
+//         point 전달 유효한지 체크
+        PointResponse pointResponse = apiPoint.getPoint(userId);
+        if (pointResponse.amount() < (requests.size() * 1000L)) throw new IllegalArgumentException("포인트가 부족합니다.");
 
-        // payment에 point 전달
-//        apiPoint.subtractPoint(requests.get(0).userId(), LottoPayRequest.payRequest("동행복권", requests.size()*1000L));
+//         payment에 point 전달
+        apiPoint.subtractPoint(userId, LottoPayRequest.payRequest("동행복권", requests.size()*1000L));
 
         Long finalRound = lottoPaymentDao.getRound();
         totalPointRepository.save(new TotalPoint(finalRound, requests.size()*1000L));

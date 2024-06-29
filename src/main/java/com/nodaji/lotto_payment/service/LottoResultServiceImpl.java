@@ -34,6 +34,7 @@ public class LottoResultServiceImpl implements LottoResultService {
         if (req == null) throw new IllegalArgumentException();
         LottoResult lottoResult = lottoResultRepository.save(req.toEntity());
         List<LottoPaymentResponse> lottoPaymentResponses = lottoPaymentRepository.findByRound(lottoResult.getId());
+        if (lottoPaymentResponses.isEmpty()) throw new IllegalArgumentException("복권 구매가 없습니다.");
         Map<String, Integer> responseRank = new HashMap<>();
         Map<Integer, List<String>> lottoResultPoint = new HashMap<>();
         List<String> userList = new ArrayList<>();
