@@ -1,5 +1,6 @@
 package com.nodaji.lotto_payment.kafka.producer;
 
+import com.nodaji.lotto_payment.kafka.dto.KafkaLottoHistoryRequest;
 import com.nodaji.lotto_payment.domain.dto.request.KafkaLottoRankRequest;
 import com.nodaji.lotto_payment.domain.dto.request.KafkaPayInfoRequest;
 import com.nodaji.lotto_payment.kafka.dto.KafkaPayStatus;
@@ -18,8 +19,9 @@ import org.springframework.stereotype.Component;
 public class KafkaProducer {
     private final KafkaTemplate<String, KafkaStatus<KafkaLottoRankRequest>> kafkaTemplate;
     private final KafkaTemplate<String, KafkaPayStatus<KafkaPayInfoRequest>> kafkaPayTemplate;
+    private final KafkaTemplate<String, KafkaStatus<KafkaLottoHistoryRequest>> kafkaHistoryTemplate;
     @Value("${kafka.product.name}") private String name;
-
+  
     @Bean
     private NewTopic newTopic(){
         return new NewTopic(name, 1, (short) 1);
@@ -31,9 +33,15 @@ public class KafkaProducer {
         kafkaTemplate.send(topic, kafkaStatus);
     }
 
+
     public void sendPay(KafkaPayInfoRequest kafkaPayInfoRequest, String topic) {
         KafkaPayStatus<KafkaPayInfoRequest> kafkaPayInfo = new KafkaPayStatus<>(kafkaPayInfoRequest, "history");
         log.info("topic : {} data : {}", topic, kafkaPayInfoRequest);
         kafkaPayTemplate.send(topic, kafkaPayInfo);
+    }
+  
+    public void sendHistory(KafkaLottoHistoryRequest kafkaLottoHistoryRequest, String topic) {
+        KafkaStatus<KafkaLottoHistoryRequest> kafkaStatus = new KafkaStatus<>(kafkaLottoHistoryRequest,"history");
+        kafkaHistoryTemplate.send(topic, kafkaStatus);
     }
 }
