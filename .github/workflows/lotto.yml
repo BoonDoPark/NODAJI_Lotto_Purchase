@@ -48,7 +48,7 @@ jobs:
         key: ${{secrets.SSH_KEY}}
         script: |
           sudo su
-          kubectl rollout restart deploy payment
+          kubectl get po
 
   dependency-submission:
 
