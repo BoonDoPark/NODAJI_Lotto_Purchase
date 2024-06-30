@@ -47,8 +47,7 @@ jobs:
         username: ${{secrets.SSH_USERNAME}}
         key: ${{secrets.SSH_KEY}}
         script: |
-          sudo su
-          kubectl get po
+          sudo kubectl rollout restart deploy payment
 
   dependency-submission:
 
