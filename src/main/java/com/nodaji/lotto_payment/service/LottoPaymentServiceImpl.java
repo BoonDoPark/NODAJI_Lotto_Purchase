@@ -31,12 +31,13 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
 
     @Override
     public void save(String userId, List<LottoPaymentRequest> requests) {
-        if (requests.isEmpty()) throw new IllegalArgumentException();
-//         point 전달 유효한지 체크
+        if (requests.isEmpty()) throw new IllegalArgumentException("Not Buy");
+
+//        point 전달 유효한지 체크
         PointResponse pointResponse = apiPoint.getPoint(userId);
         if (pointResponse.amount() < (requests.size() * 1000L)) throw new IllegalArgumentException("포인트가 부족합니다.");
 
-//         payment에 point 전달
+//        payment에 point 전달
         apiPoint.subtractPoint(userId, LottoPayRequest.payRequest("동행복권", requests.size()*1000L));
 
         Long finalRound = lottoPaymentDao.getRound();
@@ -44,6 +45,7 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
 
         requests.forEach(req -> {
                     LottoPayment lottoPayment = lottoPaymentRepository.save(req.toEntity(finalRound, userId));
+
                     // id, userid, date, round 구매 내역 전달
                     KafkaPayInfoRequest kafkaPayInfoRequest = new KafkaPayInfoRequest(lottoPayment.getId(), lottoPayment.getUserId(), lottoPayment.getCreateAt(), lottoPayment.getRound());
                     kafkaProducer.sendPay(kafkaPayInfoRequest, "history-topic");

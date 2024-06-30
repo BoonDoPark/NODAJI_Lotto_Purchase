@@ -1,10 +1,10 @@
 server:
-  port: 8081
+  port: 8080
 spring:
   application:
     name: lotto-payment
   datasource:
-    url: jdbc:postgresql://postgres-service:5432/lotto?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:postgresql://localhost:5432/lotto?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: postgres
     password: 1234
   jpa:
@@ -12,13 +12,9 @@ spring:
       ddl-auto: create
     show-sql: true
   kafka:
-    bootstrap-servers: 192.168.0.20:9092
+    bootstrap-servers: 34.170.191.69:9094
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 token:
   secret: guess_secretguess_secretguess_secretguess_secret
-
-kafka:
-  product:
-    name: history-topic

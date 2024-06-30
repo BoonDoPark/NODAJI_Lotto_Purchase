@@ -37,9 +37,6 @@ public class LottoPayment {
     @Column(name = "SIXTH")
     private Integer sixth;
 
-    @Column(name = "RANK")
-    private int rank;
-
     @Column(name = "CREATE_AT")
     private LocalDate createAt;
 
