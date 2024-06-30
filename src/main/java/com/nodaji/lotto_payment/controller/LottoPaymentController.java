@@ -15,6 +15,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/lotto/pay")
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class LottoPaymentController {
     private final LottoPaymentService lottoPaymentService;
     private final JwtUtils jwtUtils;
@@ -24,6 +26,8 @@ public class LottoPaymentController {
     public void savePayment(@RequestHeader("Authorization") String bearerToken ,@RequestBody List<LottoPaymentRequest> requests) {
         String token = bearerToken.substring(7);
         TokenInfo tokenInfo = jwtUtils.parseToken(token);
+        System.out.println("Received token" + token);
+        System.out.println("Received requests" + requests);
         lottoPaymentService.save(tokenInfo.id(), requests);
     }
 

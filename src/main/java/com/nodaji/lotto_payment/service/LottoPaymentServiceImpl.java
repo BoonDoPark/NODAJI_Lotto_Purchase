@@ -16,6 +16,7 @@ import com.nodaji.lotto_payment.domain.repository.TotalPointRepository;
 import com.nodaji.lotto_payment.kafka.producer.KafkaProducer;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
     private final KafkaProducer kafkaProducer;
 
     @Override
+    @Transactional
     public void save(String userId, List<LottoPaymentRequest> requests) {
         if (requests.isEmpty()) throw new IllegalArgumentException("Not Buy");
 
@@ -40,17 +42,32 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
 //        payment에 point 전달
         apiPoint.subtractPoint(userId, LottoPayRequest.payRequest("동행복권", requests.size()*1000L));
 
+
+        //기존 회차가 등록되어있다면 더해서 덮어쓰고, 등록되어있지않으면 새로 생성하는 로직
         Long finalRound = lottoPaymentDao.getRound();
-        totalPointRepository.save(new TotalPoint(finalRound, requests.size()*1000L));
+        if(totalPointRepository.findByRound(finalRound) == null) {
+            totalPointRepository.save(new TotalPoint(finalRound, requests.size()*1000L));
+        }
+        else{
+            TotalPoint byRound = totalPointRepository.findByRound(finalRound);
+            byRound.setTotalPoint(byRound.getTotalPoint()+requests.size()*1000L);
+        }
+
+
 
         requests.forEach(req -> {
-                    LottoPayment lottoPayment = lottoPaymentRepository.save(req.toEntity(finalRound, userId));
-
-                    // id, userid, date, round 구매 내역 전달
-                    KafkaPayInfoRequest kafkaPayInfoRequest = new KafkaPayInfoRequest(lottoPayment.getId(), lottoPayment.getUserId(), lottoPayment.getCreateAt(), lottoPayment.getRound());
-                    kafkaProducer.sendPay(kafkaPayInfoRequest, "history-topic");
-                }
-        );
+            try {
+                System.out.println("tdtdstsatas" + req);
+                LottoPayment lottoPayment = lottoPaymentRepository.save(req.toEntity(finalRound, userId));
+                // id, userid, date, round 구매 내역 전달
+                KafkaPayInfoRequest kafkaPayInfoRequest = new KafkaPayInfoRequest(lottoPayment.getId(), lottoPayment.getUserId(), lottoPayment.getCreateAt(), lottoPayment.getRound());
+                kafkaProducer.sendPay(kafkaPayInfoRequest, "history-topic");
+//                    apiPoint.createResult(kafkaPayInfoRequest);
+            } catch (Exception e) {
+                System.err.println("Error saving LottoPayment: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
