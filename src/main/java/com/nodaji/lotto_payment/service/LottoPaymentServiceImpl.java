@@ -33,13 +33,14 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
     @Override
     @Transactional
     public void save(String userId, List<LottoPaymentRequest> requests) {
-        if (requests.isEmpty()) throw new IllegalArgumentException();
-        // point 전달 유효한지 체크
-//        PointResponse pointResponse = apiPoint.getPoint(requests.get(0).userId());
-//        if (pointResponse.amount() < (requests.size() * 1000L)) throw new IllegalArgumentException("포인트가 부족합니다.");
+        if (requests.isEmpty()) throw new IllegalArgumentException("Not Buy");
 
-        // payment에 point 전달
-//        apiPoint.subtractPoint(requests.get(0).userId(), LottoPayRequest.payRequest("동행복권", requests.size()*1000L));
+//        point 전달 유효한지 체크
+        PointResponse pointResponse = apiPoint.getPoint(userId);
+        if (pointResponse.amount() < (requests.size() * 1000L)) throw new IllegalArgumentException("포인트가 부족합니다.");
+
+//        payment에 point 전달
+        apiPoint.subtractPoint(userId, LottoPayRequest.payRequest("동행복권", requests.size()*1000L));
 
 
         //기존 회차가 등록되어있다면 더해서 덮어쓰고, 등록되어있지않으면 새로 생성하는 로직

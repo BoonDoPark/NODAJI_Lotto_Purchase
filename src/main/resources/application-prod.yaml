@@ -4,9 +4,9 @@ spring:
   application:
     name: lotto-payment
   datasource:
-    url: jdbc:postgresql://postgres-deploy:5432/user_lotto_info?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-    username: postgres
-    password: 1234
+    url: jdbc:postgresql://postgres-service:5432/lotto?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: ${user}
+    password: ${password}
   jpa:
     hibernate:
       ddl-auto: create
