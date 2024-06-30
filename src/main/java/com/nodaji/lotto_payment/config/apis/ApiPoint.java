@@ -1,5 +1,6 @@
 package com.nodaji.lotto_payment.config.apis;
 
+import com.nodaji.lotto_payment.domain.dto.request.KafkaPayInfoRequest;
 import com.nodaji.lotto_payment.domain.dto.request.LottoPayRequest;
 import com.nodaji.lotto_payment.domain.dto.request.PointRequest;
 import com.nodaji.lotto_payment.domain.dto.response.PointResponse;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ApiPoint {
     private final FeignPoint feignPoint;
+    private final FeignPoint1 feignPoint1;
 
     @Async
     public PointResponse getPoint(String userId) {
@@ -26,4 +28,6 @@ public class ApiPoint {
     public void subtractPoint(String userId, LottoPayRequest req) {
         feignPoint.subtractPoint(userId, req);
     }
+
+    public void createResult(KafkaPayInfoRequest kafkaPayInfoRequest) { feignPoint1.createResult(kafkaPayInfoRequest);}
 }

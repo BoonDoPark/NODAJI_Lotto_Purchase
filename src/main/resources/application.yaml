@@ -12,7 +12,7 @@ spring:
       ddl-auto: create
     show-sql: true
   kafka:
-    bootstrap-servers: 192.168.0.20:9092
+    bootstrap-servers: 34.170.191.69:9094
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
