@@ -3,6 +3,7 @@ package com.nodaji.lotto_payment.service;
 import com.nodaji.lotto_payment.config.apis.ApiPoint;
 import com.nodaji.lotto_payment.config.utils.LottoPoint;
 import com.nodaji.lotto_payment.config.utils.LottoRank;
+import com.nodaji.lotto_payment.domain.entity.TotalPoint;
 import com.nodaji.lotto_payment.kafka.dto.KafkaLottoHistoryRequest;
 import com.nodaji.lotto_payment.domain.dto.request.KafkaLottoRankRequest;
 import com.nodaji.lotto_payment.domain.dto.request.PointRequest;
@@ -15,6 +16,7 @@ import com.nodaji.lotto_payment.domain.repository.LottoPaymentRepository;
 import com.nodaji.lotto_payment.domain.repository.LottoResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.*;
@@ -30,6 +32,7 @@ public class LottoResultServiceImpl implements LottoResultService {
     private final ApiPoint apiPoint;
 
     @Override
+    @Transactional
     public void save(LottoResultRequest req) {
         if (req == null) throw new IllegalArgumentException();
         LottoResult lottoResult = lottoResultRepository.save(req.toEntity());
@@ -37,20 +40,30 @@ public class LottoResultServiceImpl implements LottoResultService {
         Map<String, Integer> responseRank = new HashMap<>();
         Map<Integer, List<String>> lottoResultPoint = new HashMap<>();
         List<String> userList = new ArrayList<>();
+        System.out.println("response" + lottoPaymentResponses);
 
         for(LottoPaymentResponse lottoPaymentResponse : lottoPaymentResponses) {
             int count = lottoPaymentResponse.countLottoNumber(lottoPaymentResponse, req, lottoResult);
+            System.out.println("count" + count);
             boolean isBonusCheck = lottoPaymentResponse.isBonusNumber(lottoPaymentResponse, req.bonus());
+            System.out.println("isBonusCheck" + isBonusCheck);
+            //아래부분에서 null이 출력되고있음
             LottoRank lottoRank = LottoRank.getRank(count, isBonusCheck);
+            System.out.println("lottoRank"+lottoRank);
+            System.out.println("lllsdflsal"+lottoRank.getLottoRank());
 
             if (lottoRank == null) continue;
             userList.add(lottoPaymentResponse.userId());
             lottoResultPoint.put(lottoRank.getLottoRank(), userList);
 
+            System.out.println("putting"+ lottoRank.getLottoRank() + " " + lottoPaymentResponse.userId());
             responseRank.put(lottoPaymentResponse.userId(), lottoRank.getLottoRank());
         }
 
+//        TotalPoint totalPoint1 = totalPointRepository.findById(lottoResult.getId()).orElseThrow(IllegalArgumentException::new);
+//        Long totalPoint = totalPoint1.getTotalPoint();
         Long totalPoint = totalPointRepository.findByRound(lottoResult.getId()).getTotalPoint();
+        System.out.println("totalpoint"+totalPoint);
         Long fifthTotalPoint = lottoResultPoint.getOrDefault(5, new ArrayList<>()).size() * LottoPoint.FIFTH.getLottoPoint();
         Long fourthTotalPoint = lottoResultPoint.getOrDefault(4, new ArrayList<>()).size() * LottoPoint.FOURTH.getLottoPoint();
         long asd = totalPoint - (fifthTotalPoint + fourthTotalPoint);
@@ -61,7 +74,7 @@ public class LottoResultServiceImpl implements LottoResultService {
         lottoResultPoint.getOrDefault(5, new ArrayList<>()).forEach(userId -> {
             PointRequest pointRequest = new PointRequest(userId, LottoPoint.FIFTH.getLottoPoint());
             System.out.println(pointRequest.amount());
-            apiPoint.sendPoint(pointRequest);
+//            apiPoint.sendPoint(pointRequest);
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
                     new KafkaLottoHistoryRequest(pointRequest.userId(), pointRequest.amount(),5L);
             kafkaProducer.sendHistory(kafkaLottoHistoryRequest,"history-topic");
@@ -88,6 +101,7 @@ public class LottoResultServiceImpl implements LottoResultService {
             Long secondPoint = secondTotalPoint / lottoResultPoint.get(2).size();
             PointRequest pointRequest = new PointRequest(userId, secondPoint);
             System.out.println(pointRequest.amount());
+
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
                     new KafkaLottoHistoryRequest(pointRequest.userId(), pointRequest.amount(),2L);
             kafkaProducer.sendHistory(kafkaLottoHistoryRequest,"history-topic");
@@ -96,8 +110,8 @@ public class LottoResultServiceImpl implements LottoResultService {
         lottoResultPoint.getOrDefault(1, new ArrayList<>()).forEach(userId -> {
             Long firstPoint = firstTotalPoint / lottoResultPoint.get(1).size();
             PointRequest pointRequest = new PointRequest(userId, firstPoint);
-            System.out.println(pointRequest.amount());
-            apiPoint.sendPoint(pointRequest);
+            System.out.println("amount"+pointRequest.amount());
+//            apiPoint.sendPoint(pointRequest);
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
                     new KafkaLottoHistoryRequest(pointRequest.userId(), pointRequest.amount(),1L);
             kafkaProducer.sendHistory(kafkaLottoHistoryRequest,"history-topic");
