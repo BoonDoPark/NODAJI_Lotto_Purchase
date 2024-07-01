@@ -228,7 +228,7 @@ public class LottoResultServiceImpl implements LottoResultService {
             lottoRankPoint.setPoint(pointRequest.amount());
             lottoRankPointRepository.save(lottoRankPoint);
             System.out.println(pointRequest.amount());
-
+            apiPoint.sendPoint(pointRequest);
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
                     new KafkaLottoHistoryRequest(lottoRankPointResponse.payId(), pointRequest.amount(), rank);
             kafkaProducer.sendHistory(kafkaLottoHistoryRequest, "update-topic");
@@ -245,7 +245,7 @@ public class LottoResultServiceImpl implements LottoResultService {
             lottoRankPoint.setPoint(pointRequest.amount());
             lottoRankPointRepository.save(lottoRankPoint);
             System.out.println(pointRequest.amount());
-
+            apiPoint.sendPoint(pointRequest);
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
                     new KafkaLottoHistoryRequest(lottoRankPointResponse.payId(), pointRequest.amount(), rank);
             kafkaProducer.sendHistory(kafkaLottoHistoryRequest, "update-topic");
