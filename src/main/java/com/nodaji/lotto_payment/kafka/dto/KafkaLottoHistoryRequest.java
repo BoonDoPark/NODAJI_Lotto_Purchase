@@ -1,8 +1,8 @@
 package com.nodaji.lotto_payment.kafka.dto;
 
 public record KafkaLottoHistoryRequest(
-        String userId,
+       Long payId,
         Long amount,
-        Long rank
+        Integer rank
 ) {
 }

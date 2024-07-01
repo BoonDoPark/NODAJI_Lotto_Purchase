@@ -8,10 +8,8 @@ import com.nodaji.lotto_payment.domain.dto.request.LottoPaymentRequest;
 import com.nodaji.lotto_payment.domain.dto.response.LottoPaymentResponse;
 import com.nodaji.lotto_payment.domain.dto.response.PointResponse;
 import com.nodaji.lotto_payment.domain.entity.LottoPayment;
-import com.nodaji.lotto_payment.domain.entity.LottoResult;
 import com.nodaji.lotto_payment.domain.entity.TotalPoint;
 import com.nodaji.lotto_payment.domain.repository.LottoPaymentRepository;
-import com.nodaji.lotto_payment.domain.repository.LottoResultRepository;
 import com.nodaji.lotto_payment.domain.repository.TotalPointRepository;
 import com.nodaji.lotto_payment.kafka.producer.KafkaProducer;
 import lombok.AllArgsConstructor;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,11 +33,11 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
         if (requests.isEmpty()) throw new IllegalArgumentException("Not Buy");
 
 //        point 전달 유효한지 체크
-        PointResponse pointResponse = apiPoint.getPoint(userId);
-        if (pointResponse.amount() < (requests.size() * 1000L)) throw new IllegalArgumentException("포인트가 부족합니다.");
-
-//        payment에 point 전달
-        apiPoint.subtractPoint(userId, LottoPayRequest.payRequest("동행복권", requests.size()*1000L));
+//        PointResponse pointResponse = apiPoint.getPoint(userId);
+//        if (pointResponse.amount() < (requests.size() * 1000L)) throw new IllegalArgumentException("포인트가 부족합니다.");
+//
+////        payment에 point 전달
+//        apiPoint.subtractPoint(userId, LottoPayRequest.payRequest("동행복권", requests.size()*1000L));
 
 
         //기존 회차가 등록되어있다면 더해서 덮어쓰고, 등록되어있지않으면 새로 생성하는 로직
@@ -53,12 +50,11 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
             byRound.setTotalPoint(byRound.getTotalPoint()+requests.size()*1000L);
         }
 
-
-
         requests.forEach(req -> {
             try {
-                System.out.println("tdtdstsatas" + req);
+//                System.out.println("tdtdstsatas" + req);
                 LottoPayment lottoPayment = lottoPaymentRepository.save(req.toEntity(finalRound, userId));
+//                lottoPaymentRepository.save(req.toEntity(finalRound, userId));
                 // id, userid, date, round 구매 내역 전달
                 KafkaPayInfoRequest kafkaPayInfoRequest = new KafkaPayInfoRequest(lottoPayment.getId(), lottoPayment.getUserId(), lottoPayment.getCreateAt(), lottoPayment.getRound());
                 kafkaProducer.sendPay(kafkaPayInfoRequest, "history-topic");
