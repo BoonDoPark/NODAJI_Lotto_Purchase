@@ -231,7 +231,7 @@ public class LottoResultServiceImpl implements LottoResultService {
 
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
                     new KafkaLottoHistoryRequest(lottoRankPointResponse.payId(), pointRequest.amount(), rank);
-            kafkaProducer.sendHistory(kafkaLottoHistoryRequest, "history-topic");
+            kafkaProducer.sendHistory(kafkaLottoHistoryRequest, "update-topic");
         }
     }
 
@@ -248,7 +248,7 @@ public class LottoResultServiceImpl implements LottoResultService {
 
             KafkaLottoHistoryRequest kafkaLottoHistoryRequest =
                     new KafkaLottoHistoryRequest(lottoRankPointResponse.payId(), pointRequest.amount(), rank);
-            kafkaProducer.sendHistory(kafkaLottoHistoryRequest, "history-topic");
+            kafkaProducer.sendHistory(kafkaLottoHistoryRequest, "update-topic");
         }
     }
 
