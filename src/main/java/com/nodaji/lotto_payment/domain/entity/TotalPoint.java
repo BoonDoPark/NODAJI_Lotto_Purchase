@@ -18,6 +18,7 @@ public class TotalPoint {
     @Column(name = "ROUND")
     private Long round;
 
+    @Setter
     @Column(name = "TOTAL_POINT")
     private Long totalPoint;
 }

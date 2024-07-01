@@ -23,12 +23,13 @@ public class LottoPaymentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void savePayment(@RequestHeader("Authorization") String bearerToken ,@RequestBody List<LottoPaymentRequest> requests) {
-        String token = bearerToken.substring(7);
-        TokenInfo tokenInfo = jwtUtils.parseToken(token);
-        System.out.println("Received token" + token);
+    public void savePayment(@RequestBody List<LottoPaymentRequest> requests) {
+//        @RequestHeader("Authorization") String bearerToken,
+//        String token = bearerToken.substring(7);
+//        TokenInfo tokenInfo = jwtUtils.parseToken(token);
+//        System.out.println("Received token" + token);
         System.out.println("Received requests" + requests);
-        lottoPaymentService.save(tokenInfo.id(), requests);
+        lottoPaymentService.save("asd", requests);
     }
 
     @GetMapping
