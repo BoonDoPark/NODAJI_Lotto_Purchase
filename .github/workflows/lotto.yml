@@ -35,10 +35,10 @@ jobs:
         password: ${{secrets.DOCKER_PASSWORD}}
 
     - name: Docker build
-      run: docker build -t ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:latest .
+      run: docker build -t ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:prod .
 
     - name: Docker push
-      run: docker push ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:latest
+      run: docker push ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:prod
 
     - name: ssh
       uses: appleboy/ssh-action@v1.0.3
