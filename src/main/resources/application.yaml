@@ -4,7 +4,7 @@ spring:
   application:
     name: lotto-payment
   datasource:
-    url: jdbc:postgresql://localhost:5432/lotto?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:postgresql://postgres-service:5432/lotto?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: postgres
     password: 1234
   jpa:
