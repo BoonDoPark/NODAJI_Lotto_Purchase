@@ -43,4 +43,5 @@ public record LottoPaymentResponse(
         List<Integer> lottoPayments = makeLottoPaymentList(lottoPayment);
         return lottoPayments.contains(bonusNumber);
     }
+
 }

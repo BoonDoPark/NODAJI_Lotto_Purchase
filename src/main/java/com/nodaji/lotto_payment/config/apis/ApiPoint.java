@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ApiPoint {
     private final FeignPoint feignPoint;
+    private final FeignCheck feignCheck;
     private final FeignPoint1 feignPoint1;
 
     @Async
@@ -21,7 +22,7 @@ public class ApiPoint {
 
     @Async
     public void sendPoint(PointRequest pointRequest) {
-        feignPoint.sendPoint(pointRequest);
+        feignCheck.sendPoint(pointRequest);
     }
 
     @Async
