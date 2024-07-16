@@ -54,7 +54,7 @@ public class LottoPaymentServiceImpl implements LottoPaymentService{
             try {
 //                System.out.println("tdtdstsatas" + req);
                 LottoPayment lottoPayment = lottoPaymentRepository.save(req.toEntity(finalRound, userId));
-//                lottoPaymentRepository.save(req.toEntity(finalRound, userId));
+
                 // id, userid, date, round 구매 내역 전달
                 KafkaPayInfoRequest kafkaPayInfoRequest = new KafkaPayInfoRequest(lottoPayment.getId(), lottoPayment.getUserId(), lottoPayment.getCreateAt(), lottoPayment.getRound());
                 kafkaProducer.sendPay(kafkaPayInfoRequest, "history-topic");

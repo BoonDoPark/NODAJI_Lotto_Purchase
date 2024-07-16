@@ -1,6 +1,5 @@
 package com.nodaji.lotto_payment.config.utils;
 
-import com.nodaji.lotto_payment.domain.repository.TotalPointRepository;
 import lombok.Getter;
 
 @Getter

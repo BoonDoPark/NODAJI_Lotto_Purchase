@@ -1,7 +1,6 @@
 package com.nodaji.lotto_payment.domain.dao;
 
 import com.nodaji.lotto_payment.domain.entity.LottoResult;
-import com.nodaji.lotto_payment.domain.repository.LottoPaymentRepository;
 import com.nodaji.lotto_payment.domain.repository.LottoResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
