@@ -2,7 +2,10 @@
 동행복권을 모티브로 노다지라는 도메인에 복권, 연금 복권, 스포츠 토토를 서비스하는 웹 애플리케이션을 구현하였습니다.
 
 # 담당 업무
-노다지에서 복권의 구매 및 당첨 서비스를 구현하였습니다.
+노다지에서 복권의 구매 및 당첨, 통계 서비스를 구현하였습니다.
+
+- 로또 당첨 번호 스케줄링 서버 : https://github.com/encore-full-stack-5/NODAJI_Lotto_Scheduler
+- 통계 서버 : https://github.com/encore-full-stack-5/NODAJI_LOTTO_ANALITICS_BE
 
 # 기술 스택
 - Sever
